@@ -3,33 +3,44 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CSS Art: Kaffeetasse (Verbessert)</title>
+    <title>CSS Art: Kaffeetasse (Profi-Version)</title>
     <style>
-        /* Der "Maltisch" für unser Kunstwerk */
+        /* Verbesserter Hintergrund mit radialem Verlauf für mehr Tiefe */
         body {
             display: grid;
             place-items: center;
             min-height: 100vh;
             margin: 0;
-            background-color: #d7e0e8;
+            background: radial-gradient(circle, #eef2f7, #d7e0e8);
         }
 
-        /* Der Container, der alles zusammenhält und zentriert */
         .coffee-scene {
             position: relative;
         }
 
-        /* Der Untersetzer */
+        /* Der Untersetzer mit einem feineren Rand und Schatten */
         .saucer {
             width: 240px;
             height: 240px;
-            background: #fff;
+            background: #f9f9f9;
             border-radius: 50%;
-            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1), 0 2px 5px rgba(0, 0, 0, 0.05);
-            /* Ein tieferer, weicherer Schatten */
+            box-shadow: 0 15px 25px rgba(0, 0, 0, 0.15), 0 5px 10px rgba(0, 0, 0, 0.05);
+            position: relative;
+        }
+        /* Ein innerer Rand für den Untersetzer, der Tiefe erzeugt */
+        .saucer::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 85%;
+            height: 85%;
+            border-radius: 50%;
+            border: 1px solid rgba(0, 0, 0, 0.05);
         }
 
-        /* Die Tasse selbst */
+
         .mug {
             position: absolute;
             top: -65px;
@@ -37,60 +48,72 @@
             transform: translateX(-50%);
             width: 150px;
             height: 170px;
-            /* Ein leichter Farbverlauf simuliert Rundung */
-            background: linear-gradient(to right, #f9f9f9, #e9e9e9);
+            background: linear-gradient(to right, #ffffff, #e6e6e6);
             border-bottom-left-radius: 75px;
             border-bottom-right-radius: 75px;
             border-top-left-radius: 10px;
             border-top-right-radius: 10px;
         }
-
-        /* Schatten, den die Tasse auf den Untersetzer wirft */
+        
+        /* NEU: Der Kontaktschatten (Ambient Occlusion) für mehr Realismus */
         .mug::before {
             content: '';
             position: absolute;
             bottom: -15px;
             left: 50%;
             transform: translateX(-50%);
-            width: 90%;
+            width: 100%;
             height: 30px;
             background: #000;
-            opacity: 0.08;
+            opacity: 0.1;
             border-radius: 50%;
-            filter: blur(10px); /* Weichzeichner für den Schatten */
+            filter: blur(12px);
         }
         
-        /* Der Henkel der Tasse */
+        /* NEU: Das Glanzlicht (Specular Highlight) für eine glänzende Oberfläche */
+        .mug::after {
+            content: '';
+            position: absolute;
+            top: 20px;
+            left: 15px;
+            width: 15px;
+            height: 70px;
+            background: #fff;
+            opacity: 0.4;
+            border-radius: 50%;
+            filter: blur(5px);
+            transform: rotate(15deg);
+        }
+        
         .handle {
             position: absolute;
-            right: -60px;
+            right: -65px;
             top: 20px;
             width: 50px;
             height: 80px;
-            border: 20px solid #e9e9e9; /* Passt zur dunkleren Seite der Tasse */
+            border: 20px solid #e6e6e6;
             border-left-color: transparent;
             border-radius: 50%;
             transform: rotate(25deg);
-            box-shadow: -2px 2px 5px rgba(0, 0, 0, 0.05); /* Eigener kleiner Schatten */
+            box-shadow: -3px 3px 8px rgba(0, 0, 0, 0.07);
         }
-
-        /* NEU: Der Kaffee in der Tasse */
+        
+        /* Verbesserte Kaffee-Oberfläche mit innerem Schatten (Meniskus-Effekt) */
         .coffee {
             position: absolute;
             top: 12px;
             left: 50%;
             transform: translateX(-50%);
-            width: calc(100% - 24px); /* Füllt die Tasse bis zum Rand */
+            width: calc(100% - 24px);
             height: 30px;
-            background: linear-gradient(to right, #7b4f3a, #6a422f); /* #6f4e37 ist eine gute Kaffeefarbe */
+            background: linear-gradient(to right, #6a422f, #5a3825);
             border-radius: 50%;
-            box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2); /* Schatten am inneren Tassenrand */
+            box-shadow: inset 0px 0px 5px 2px rgba(0, 0, 0, 0.2);
         }
-
-        /* Der animierte Dampf */
+        
         .steam {
             position: absolute;
-            top: -60px;
+            top: -70px;
             left: 50%;
             transform: translateX(-50%);
             display: flex;
@@ -99,40 +122,35 @@
         }
 
         .steam-wisp {
-            width: 10px;
-            height: 50px;
-            background-color: #ffffff;
-            border-radius: 6px;
-            opacity: 0; /* Startet unsichtbar */
-            /* Die Animation wird hier zugewiesen */
-            animation: steam-rise 4s infinite; 
+            width: 12px;
+            height: 60px;
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 8px;
+            filter: blur(2px);
+            opacity: 0;
+            animation: steam-rise 5s infinite;
         }
+        
+        /* Verbesserte, asynchrone Animationen */
+        .steam-wisp:nth-child(1) { animation-delay: 0s; animation-timing-function: cubic-bezier(0.25, 0.1, 0.25, 1); }
+        .steam-wisp:nth-child(2) { animation-delay: 1.2s; animation-timing-function: cubic-bezier(0.5, 0.1, 0.5, 1); }
+        .steam-wisp:nth-child(3) { animation-delay: 2.8s; animation-timing-function: cubic-bezier(0.1, 0.1, 0.1, 1); }
 
-        /* Jede Dampf-Schwade bekommt eine andere Verzögerung für einen natürlichen Effekt */
-        .steam-wisp:nth-child(1) { animation-delay: 0s; }
-        .steam-wisp:nth-child(2) { animation-delay: 1s; }
-        .steam-wisp:nth-child(3) { animation-delay: 2.5s; }
-
-
-        /* Die Keyframe-Animation für den Dampf */
+        /* Verbesserte Keyframe-Animation mit seitlicher Drift */
         @keyframes steam-rise {
             0% {
-                /* Startet weiter unten und ist unsichtbar */
-                transform: translateY(0) scale(0.8);
+                transform: translateY(0) translateX(0) scale(0.8);
                 opacity: 0;
             }
             15% {
-                /* Steigt auf und wird sichtbar */
-                transform: translateY(-20px) scale(1);
-                opacity: 0.5;
+                transform: translateY(-25px) translateX(-5px) scale(1);
+                opacity: 0.6;
             }
             80% {
-                /* Steigt weiter auf und beginnt zu verblassen */
-                transform: translateY(-100px) scale(1.2);
+                transform: translateY(-120px) translateX(10px) scale(1.3);
                 opacity: 0;
             }
             100% {
-                /* Komplett unsichtbar am Ende */
                 opacity: 0;
             }
         }
@@ -145,11 +163,6 @@
         <div class="mug">
             <div class="coffee"></div>
             <div class="handle"></div>
-            <div class="steam">
-                <div class="steam-wisp"></div>
-                <div class="steam-wisp"></div>
-                <div class="steam-wisp"></div>
-            </div>
         </div>
     </div>
 
