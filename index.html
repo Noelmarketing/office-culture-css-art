@@ -3,9 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Das Meisterwerk: Interaktive 3D-Kaffeetasse (v2)</title>
+    <title>Das Meisterwerk: Interaktive 3D-Kaffeetasse (Finale Version)</title>
     <style>
         :root {
+            /* CSS Variablen für die interaktive Drehung */
             --rotate-x: -25deg;
             --rotate-y: 35deg;
         }
@@ -15,55 +16,70 @@
             place-items: center;
             min-height: 100vh;
             margin: 0;
-            background: #2d3436;
+            background: #4a4a4a; /* Dunklerer Hintergrund für starken Kontrast */
             perspective: 2000px;
             overflow: hidden;
         }
 
+        /* Die 3D-Szene: Hier passiert die Magie */
         .scene {
+            position: relative;
             width: 300px;
             height: 300px;
             transform-style: preserve-3d;
+            /* Wendet die Rotation aus den CSS-Variablen an */
             transform: rotateX(var(--rotate-x)) rotateY(var(--rotate-y));
             transition: transform 0.05s linear;
         }
 
+        /* Der SVG-Container selbst */
         .coffee-cup-svg {
             position: absolute;
             width: 100%;
             height: 100%;
         }
 
-        /* --- STYLING --- */
+        /* --- STYLING DER SVG-ELEMENTE MIT CSS TRANSFORMATIONEN --- */
         
         #saucer {
             fill: url(#porcelainGradient);
             transform-origin: center;
-            filter: drop-shadow(5px 15px 15px rgba(0,0,0,0.3));
+            /* Der Teller wird nach hinten gekippt */
+            transform: rotateX(75deg) translateZ(-25px);
+            filter: drop-shadow(0px 30px 15px rgba(0,0,0,0.3));
         }
 
-        /* Gruppe für Tasse und Henkel, damit der Schatten korrekt fällt */
+        /* Tasse und Henkel werden als Gruppe transformiert */
         #cup-group {
-             filter: drop-shadow(5px 15px 15px rgba(0,0,0,0.2));
+            transform-origin: center;
+             /* Hebt die Tasse an, sodass sie auf dem Teller steht */
+            transform: translateY(-90px) translateZ(25px);
         }
-
+        
         #mug-body {
             fill: url(#porcelainGradient);
+            filter: drop-shadow(10px 15px 15px rgba(0,0,0,0.15));
         }
-
-        /* Der Henkel: Jetzt ein einfacher Pfad mit dicker, runder Linie */
+        
+        /* Der Henkel wird exakt mit der Tasse positioniert */
         #handle {
             fill: none;
-            stroke: url(#porcelainGradient);
-            stroke-width: 28;
-            stroke-linecap: round; /* Wichtig für die weichen Enden */
+            stroke: url(#handleGradient);
+            stroke-width: 25;
+            stroke-linecap: round;
+        }
+        
+        /* Neuer Schatten für den inneren Tassenrand */
+        #mug-inner-shadow {
+            fill: #000;
+            opacity: 0.1;
+            filter: blur(2px);
         }
         
         #coffee {
             fill: #593a2a;
         }
 
-        /* Latte Art mit einem realistischeren Muster */
         #latte-art {
             fill: #d3c2b8;
             opacity: 0.9;
@@ -71,16 +87,16 @@
             transform-origin: center;
         }
 
-        /* Glanzlicht mit subtiler Anpassung an die Drehung */
+        /* Glanzlicht */
         #highlight {
             fill: white;
-            opacity: 0.1;
+            opacity: 0.15;
             filter: blur(8px);
             transform-origin: center;
             transform: rotateY(calc(var(--rotate-y) * -0.5));
         }
-
-        /* Dampf-Animation */
+        
+        /* DAMPF-ANIMATION (bleibt unverändert) */
         .steam-container {
             position: absolute;
             top: -100px;
@@ -91,7 +107,6 @@
             width: 100px;
             pointer-events: none;
         }
-
         .steam-wisp {
             width: 15px;
             height: 80px;
@@ -101,7 +116,6 @@
             opacity: 0;
             animation: steam-rise 6s infinite linear;
         }
-
         .steam-wisp:nth-child(1) { animation-delay: -2s; }
         .steam-wisp:nth-child(2) { animation-delay: -4s; transform: scale(0.9); }
         .steam-wisp:nth-child(3) { animation-delay: 0s; transform: scale(0.8); }
@@ -111,7 +125,6 @@
             15%  { opacity: 1; }
             100% { opacity: 0; transform: translateY(-100px) scale(1.5); }
         }
-
         @keyframes latte-flow {
             from { transform: scale(1) rotate(-5deg); }
             to   { transform: scale(1.05) rotate(5deg); }
@@ -131,20 +144,25 @@
         <defs>
             <radialGradient id="porcelainGradient" cx="50%" cy="50%" r="70%" fx="30%" fy="30%">
                 <stop offset="0%" style="stop-color:#f9f9f9" />
-                <stop offset="100%" style="stop-color:#d1d1d1" />
+                <stop offset="100%" style="stop-color:#d6d6d6" />
             </radialGradient>
+            <linearGradient id="handleGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" style="stop-color:#e0e0e0" />
+                <stop offset="100%" style="stop-color:#c0c0c0" />
+            </linearGradient>
         </defs>
 
-        <g transform="translate(0, 50) rotateX(75deg)">
-            <path id="saucer" d="M 40,120 C 40,150 260,150 260,120 C 260,90 40,90 40,120 Z" />
-
-            <g id="cup-group" transform="translate(0, -90)">
-                <path id="handle" d="M220,50 A 30,45 0 1,1 220,130" />
-                <path id="mug-body" d="M 80,0 C 75,120 225,120 220,0 Z" />
-                <ellipse id="coffee" cx="150" cy="0" rx="68" ry="20" />
-                <path id="latte-art" d="M150,0 C 135, -10 135, 10 150, 10 S 165,-10 150,0z" />
-                <path id="highlight" d="M 95,10 C 100,40 95,70 90,100 A 100,100 0 0,1 90,20 C 90,20 90,-20 95,10 Z" />
-            </g>
+        <g id="saucer">
+            <path d="M 40,220 C 40,250 260,250 260,220 C 260,190 40,190 40,220 Z" />
+        </g>
+        
+        <g id="cup-group">
+            <path id="handle" d="M220,95 A 35,50 0 1,1 220,175" />
+            <path id="mug-body" d="M 80,80 C 75,200 225,200 220,80 Z" />
+            <path id="mug-inner-shadow" d="M 80,80 C 80,95 220,95 220,80 C 220,65 80,65 80,80 Z" />
+            <ellipse id="coffee" cx="150" cy="80" rx="68" ry="20" />
+            <path id="latte-art" d="M150,80 C 135,70 135,90 150,90 S 165,70 150,80z" />
+            <path id="highlight" d="M 95,90 C 100,120 95,150 90,180 A 100,100 0 0,1 90,100 C 90,100 90,60 95,90 Z" />
         </g>
     </svg>
 </div>
