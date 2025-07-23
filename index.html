@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Das Meisterwerk: Kaffeetasse</title>
+    <title>Das Meisterwerk: Kaffeetasse (Finale, korrigierte Version)</title>
     <style>
         body {
             display: grid;
@@ -23,34 +23,82 @@
             height: 100%;
         }
 
+        /* --- STYLING DER SVG-ELEMENTE --- */
+        
+        #table-shadow {
+            fill: #000;
+            opacity: 0.2;
+            filter: blur(8px);
+        }
+        
+        #saucer {
+            fill: url(#porcelainGradient);
+            filter: drop-shadow(0px 20px 15px rgba(0,0,0,0.3));
+        }
+
+        #cup-shadow-on-saucer {
+            fill: #000;
+            opacity: 0.15;
+            filter: blur(4px);
+        }
+        
+        #mug-body, #handle {
+            fill: url(#porcelainGradient);
+        }
+        
+        #handle-shadow {
+            fill: black;
+            opacity: 0.1;
+            filter: blur(3px);
+        }
+
+        #mug-inner-shadow {
+            fill: url(#innerShadowGradient);
+        }
+        
+        #coffee {
+            fill: url(#coffeeGradient);
+        }
+
+        #latte-art {
+            fill: #d3c2b8;
+            opacity: 0.9;
+        }
+
+        #highlight {
+            fill: white;
+            opacity: 0.4;
+            filter: blur(5px);
+        }
+
         /* --- DAMPF-ANIMATION --- */
         .steam-container {
             position: absolute;
             width: 200px;
             height: 200px;
-            transform: translate(125px, -30px); /* Positioniert den Dampf exakt über dem Kaffee */
+            transform: translate(125px, 20px); 
             pointer-events: none;
         }
         .steam-wisp {
             position: absolute;
-            bottom: 20px;
+            bottom: 0;
             left: 50%;
-            width: 8px; /* Dünnerer, eleganterer Dampf */
-            height: 50px;
-            background: rgba(255, 255, 255, 0.2);
+            width: 10px;
+            height: 60px;
+            background: rgba(255, 255, 255, 0.3);
             border-radius: 50%;
-            filter: blur(4px);
+            filter: blur(5px);
             opacity: 0;
             animation: steam-rise 7s infinite ease-out;
         }
-        .steam-wisp:nth-child(1) { animation-delay: 0s; left: 40%; }
-        .steam-wisp:nth-child(2) { animation-delay: -5s; left: 60%; }
-        .steam-wisp:nth-child(3) { animation-delay: -2.5s; left: 50%; transform: scale(0.9); }
+        .steam-wisp:nth-child(1) { animation-delay: -1.5s; left: 45%; }
+        .steam-wisp:nth-child(2) { animation-delay: -3.5s; left: 60%; transform: scale(0.9); }
+        .steam-wisp:nth-child(3) { animation-delay: 0s; left: 55%; transform: scale(0.8); }
 
         @keyframes steam-rise {
-            0%   { opacity: 0; transform: translateY(0) scale(1) rotate(0deg); }
+            0%   { opacity: 0; transform: translateY(0) scale(1); }
             15%  { opacity: 1; }
-            100% { opacity: 0; transform: translateY(-180px) scale(2.5) rotate(15deg); }
+            100% { opacity: 0; transform: translateY(-150px) scale(2); }
         }
     </style>
 </head>
@@ -65,41 +113,43 @@
     
     <svg class="coffee-cup-svg" viewBox="0 0 300 300">
         <defs>
-            <radialGradient id="porcelainGradient" cx="65%" cy="30%" r="80%">
-                <stop offset="0%" stop-color="#fdfdfd" />
-                <stop offset="60%" stop-color="#f0f0f0" />
-                <stop offset="100%" stop-color="#d8d8d8" />
+            <radialGradient id="porcelainGradient" cx="75%" cy="25%" r="80%">
+                <stop offset="0%" stop-color="#fff" />
+                <stop offset="60%" stop-color="#f2f2f2" />
+                <stop offset="100%" stop-color="#e2e2e2" />
             </radialGradient>
             <radialGradient id="coffeeGradient" cx="50%" cy="50%" r="50%">
-                <stop offset="0%" stop-color="#6f4e37" />
+                <stop offset="0%" stop-color="#7a523e" />
                 <stop offset="100%" stop-color="#593a2a" />
+            </radialGradient>
+            <radialGradient id="innerShadowGradient">
+                <stop offset="85%" stop-color="#000" stop-opacity="0.1" />
+                <stop offset="100%" stop-color="#000" stop-opacity="0" />
             </radialGradient>
         </defs>
         
-        <g transform="translate(0, 30)">
-            <path id="table-shadow" d="M45,235 C45,250 255,250 255,235 C255,220 45,220 45,235 Z" fill="#000" opacity="0.15" filter="url(#blur)" />
-            <filter id="blur"><feGaussianBlur stdDeviation="7" /></filter>
+        <g transform="translate(-50, 0)">
+            <path id="table-shadow" d="M100,245 C100,260 310,260 310,245 C310,230 100,230 100,245 Z" />
             
-            <path id="saucer" d="M40,210 C40,240 260,240 260,210 C260,180 40,180 40,210 Z" fill="url(#porcelainGradient)" />
+            <path id="saucer" d="M95,215 C95,245 315,245 315,215 C315,185 95,185 95,215 Z" />
             
-            <path id="cup-shadow-on-saucer" d="M150,215 a 68,18 0 0,1 0,36 a 68,18 0 0,1 0,-36" fill="#000" opacity="0.1" filter="url(#soft-blur)" />
-            <filter id="soft-blur"><feGaussianBlur stdDeviation="3" /></filter>
+            <path id="cup-shadow-on-saucer" d="M205,220 a 70,18 0 0,1 0,36 a 70,18 0 0,1 0,-36" />
 
             <g id="handle-group">
-                <path d="M215,115 C240,115 255,165 225,185 L215,175 C240,160 235,120 215,115 Z" fill="rgba(0,0,0,0.1)" transform="translate(5, 8)"/>
-                <path d="M215,110 C245,110 260,160 230,180 L220,170 C245,155 240,115 215,110 Z" fill="url(#porcelainGradient)" />
+                <path id="handle-shadow" d="M280,118 C300,118 315,163 290,183 L283,178 C305,160 300,123 280,118 Z" fill="rgba(0,0,0,0.15)"/>
+                <path id="handle" d="M280,115 C305,115 320,160 295,180 L288,175 C310,157 305,120 280,115 Z" />
             </g>
             
-            <path id="cup-body" d="M80,70 C75,195 225,195 220,70 Z" fill="url(#porcelainGradient)" />
+            <path id="cup-body" d="M145,80 C140,205 290,205 285,80 Z" />
             
-            <path id="cup-rim" d="M80,70 C80,88 220,88 220,70 C220,52 80,52 80,70 Z" fill="url(#porcelainGradient)" />
+            <path id="cup-rim" d="M145,80 C145,98 285,98 285,80 C285,62 145,62 145,80 Z" />
             
-            <ellipse id="coffee" cx="150" cy="70" rx="68" ry="20" fill="url(#coffeeGradient)" />
+            <path id="mug-inner-shadow" d="M145,80 C145,95 285,95 285,80 C285,65 145,65 145,80 Z" />
             
-            <path id="coffee-highlight" d="M110,65 Q130,60 150,68 Q170,75 180,70" fill="rgba(255,255,255,0.1)" />
+            <ellipse id="coffee" cx="215" cy="80" rx="68" ry="20" />
+            <path id="latte-art" d="M215,80 C200,70 200,90 215,90 S 230,70 215,80z" />
             
-            <path id="cup-highlight" d="M90,80 C95,110 95,140 90,175 A 150,150 0 0,1 85,85 C85,85 85,50 90,80 Z" fill="rgba(255,255,255,0.7)" filter="url(#highlight-blur)" />
-            <filter id="highlight-blur"><feGaussianBlur stdDeviation="4" /></filter>
+            <path id="highlight" d="M160,90 C165,120 165,150 160,185 A 150,150 0 0,1 155,95 C155,95 155,60 160,90 Z" />
         </g>
     </svg>
 </div>
