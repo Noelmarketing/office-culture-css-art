@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSS Art: Kaffeetasse (Verbessert)</title>
+    <style>
+        /* Der "Maltisch" für unser Kunstwerk */
+        body {
+            display: grid;
+            place-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #d7e0e8;
+        }
+
+        /* Der Container, der alles zusammenhält und zentriert */
+        .coffee-scene {
+            position: relative;
+        }
+
+        /* Der Untersetzer */
+        .saucer {
+            width: 240px;
+            height: 240px;
+            background: #fff;
+            border-radius: 50%;
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1), 0 2px 5px rgba(0, 0, 0, 0.05);
+            /* Ein tieferer, weicherer Schatten */
+        }
+
+        /* Die Tasse selbst */
+        .mug {
+            position: absolute;
+            top: -65px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 150px;
+            height: 170px;
+            /* Ein leichter Farbverlauf simuliert Rundung */
+            background: linear-gradient(to right, #f9f9f9, #e9e9e9);
+            border-bottom-left-radius: 75px;
+            border-bottom-right-radius: 75px;
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+        }
+
+        /* Schatten, den die Tasse auf den Untersetzer wirft */
+        .mug::before {
+            content: '';
+            position: absolute;
+            bottom: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+            height: 30px;
+            background: #000;
+            opacity: 0.08;
+            border-radius: 50%;
+            filter: blur(10px); /* Weichzeichner für den Schatten */
+        }
+        
+        /* Der Henkel der Tasse */
+        .handle {
+            position: absolute;
+            right: -60px;
+            top: 20px;
+            width: 50px;
+            height: 80px;
+            border: 20px solid #e9e9e9; /* Passt zur dunkleren Seite der Tasse */
+            border-left-color: transparent;
+            border-radius: 50%;
+            transform: rotate(25deg);
+            box-shadow: -2px 2px 5px rgba(0, 0, 0, 0.05); /* Eigener kleiner Schatten */
+        }
+
+        /* NEU: Der Kaffee in der Tasse */
+        .coffee {
+            position: absolute;
+            top: 12px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: calc(100% - 24px); /* Füllt die Tasse bis zum Rand */
+            height: 30px;
+            background: linear-gradient(to right, #7b4f3a, #6a422f); /* #6f4e37 ist eine gute Kaffeefarbe */
+            border-radius: 50%;
+            box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2); /* Schatten am inneren Tassenrand */
+        }
+
+        /* Der animierte Dampf */
+        .steam {
+            position: absolute;
+            top: -60px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 15px;
+            z-index: 10;
+        }
+
+        .steam-wisp {
+            width: 10px;
+            height: 50px;
+            background-color: #ffffff;
+            border-radius: 6px;
+            opacity: 0; /* Startet unsichtbar */
+            /* Die Animation wird hier zugewiesen */
+            animation: steam-rise 4s infinite; 
+        }
+
+        /* Jede Dampf-Schwade bekommt eine andere Verzögerung für einen natürlichen Effekt */
+        .steam-wisp:nth-child(1) { animation-delay: 0s; }
+        .steam-wisp:nth-child(2) { animation-delay: 1s; }
+        .steam-wisp:nth-child(3) { animation-delay: 2.5s; }
+
+
+        /* Die Keyframe-Animation für den Dampf */
+        @keyframes steam-rise {
+            0% {
+                /* Startet weiter unten und ist unsichtbar */
+                transform: translateY(0) scale(0.8);
+                opacity: 0;
+            }
+            15% {
+                /* Steigt auf und wird sichtbar */
+                transform: translateY(-20px) scale(1);
+                opacity: 0.5;
+            }
+            80% {
+                /* Steigt weiter auf und beginnt zu verblassen */
+                transform: translateY(-100px) scale(1.2);
+                opacity: 0;
+            }
+            100% {
+                /* Komplett unsichtbar am Ende */
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="coffee-scene">
+        <div class="saucer"></div>
+        <div class="mug">
+            <div class="coffee"></div>
+            <div class="handle"></div>
+            <div class="steam">
+                <div class="steam-wisp"></div>
+                <div class="steam-wisp"></div>
+                <div class="steam-wisp"></div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
