@@ -3,49 +3,53 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CSS Art: Kaffeetasse (Profi-Version)</title>
+    <title>CSS Art: Interaktive 3D Kaffeetasse</title>
     <style>
-        /* Verbesserter Hintergrund mit radialem Verlauf für mehr Tiefe */
+        :root {
+            /* CSS Variablen für die interaktive Drehung */
+            --rotate-x: -15deg;
+            --rotate-y: 15deg;
+        }
+
         body {
             display: grid;
             place-items: center;
             min-height: 100vh;
             margin: 0;
             background: radial-gradient(circle, #eef2f7, #d7e0e8);
+            /* Wichtig, um die 3D-Perspektive für die Szene zu aktivieren */
+            perspective: 1000px;
         }
 
+        /* Die 3D-Szene */
         .coffee-scene {
             position: relative;
+            width: 300px;
+            height: 300px;
+            /* Aktiviert den 3D-Render-Kontext für alle Kind-Elemente */
+            transform-style: preserve-3d;
+            /* Wendet die Rotation aus den CSS-Variablen an */
+            transform: rotateX(var(--rotate-x)) rotateY(var(--rotate-y));
+            transition: transform 0.1s linear; /* Sorgt für eine weiche Bewegung */
         }
 
-        /* Der Untersetzer mit einem feineren Rand und Schatten */
         .saucer {
             width: 240px;
             height: 240px;
             background: #f9f9f9;
             border-radius: 50%;
-            box-shadow: 0 15px 25px rgba(0, 0, 0, 0.15), 0 5px 10px rgba(0, 0, 0, 0.05);
-            position: relative;
-        }
-        /* Ein innerer Rand für den Untersetzer, der Tiefe erzeugt */
-        .saucer::before {
-            content: '';
+            box-shadow: 0 25px 35px rgba(0, 0, 0, 0.2), 0 5px 15px rgba(0, 0, 0, 0.1);
             position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 85%;
-            height: 85%;
-            border-radius: 50%;
-            border: 1px solid rgba(0, 0, 0, 0.05);
+            bottom: 30px;
+            left: 30px;
+            /* Positioniert den Untersetzer im 3D-Raum */
+            transform: rotateX(80deg) translateZ(-20px);
         }
-
 
         .mug {
             position: absolute;
-            top: -65px;
-            left: 50%;
-            transform: translateX(-50%);
+            top: 20px;
+            left: 75px;
             width: 150px;
             height: 170px;
             background: linear-gradient(to right, #ffffff, #e6e6e6);
@@ -53,52 +57,50 @@
             border-bottom-right-radius: 75px;
             border-top-left-radius: 10px;
             border-top-right-radius: 10px;
+            transform-style: preserve-3d; /* Wichtig für die Kinder der Tasse */
         }
         
-        /* NEU: Der Kontaktschatten (Ambient Occlusion) für mehr Realismus */
-        .mug::before {
+        .mug::before { /* Kontaktschatten */
             content: '';
             position: absolute;
-            bottom: -15px;
+            bottom: -29px;
             left: 50%;
-            transform: translateX(-50%);
+            transform: translateX(-50%) rotateX(90deg);
             width: 100%;
-            height: 30px;
-            background: #000;
-            opacity: 0.1;
-            border-radius: 50%;
-            filter: blur(12px);
+            height: 60px;
+            background: radial-gradient(ellipse, rgba(0,0,0,0.15), transparent 60%);
         }
         
-        /* NEU: Das Glanzlicht (Specular Highlight) für eine glänzende Oberfläche */
-        .mug::after {
+        .mug::after { /* Glanzlicht */
             content: '';
             position: absolute;
-            top: 20px;
-            left: 15px;
-            width: 15px;
-            height: 70px;
+            top: 10px;
+            left: 10px;
+            width: 25px;
+            height: 80px;
             background: #fff;
-            opacity: 0.4;
+            opacity: 0.25;
             border-radius: 50%;
-            filter: blur(5px);
-            transform: rotate(15deg);
+            filter: blur(8px);
+            /* Passt das Licht an die Drehung an */
+            transform: rotateY(calc(var(--rotate-y) * -1)) rotateX(calc(var(--rotate-x) * 0.5));
         }
         
         .handle {
             position: absolute;
-            right: -65px;
+            right: -75px;
             top: 20px;
-            width: 50px;
-            height: 80px;
+            width: 60px;
+            height: 90px;
             border: 20px solid #e6e6e6;
             border-left-color: transparent;
+            border-right-color: transparent;
             border-radius: 50%;
-            transform: rotate(25deg);
-            box-shadow: -3px 3px 8px rgba(0, 0, 0, 0.07);
+            transform: rotate(25deg) translateZ(0px); /* Henkel bleibt auf der Ebene der Tasse */
+            box-shadow: -4px 4px 10px rgba(0, 0, 0, 0.1);
         }
         
-        /* Verbesserte Kaffee-Oberfläche mit innerem Schatten (Meniskus-Effekt) */
+        /* NEU: Latte Art mit radialen Farbverläufen */
         .coffee {
             position: absolute;
             top: 12px;
@@ -106,16 +108,33 @@
             transform: translateX(-50%);
             width: calc(100% - 24px);
             height: 30px;
-            background: linear-gradient(to right, #6a422f, #5a3825);
+            background: #5a3825; /* Grundfarbe Kaffee */
             border-radius: 50%;
             box-shadow: inset 0px 0px 5px 2px rgba(0, 0, 0, 0.2);
+            overflow: hidden; /* Versteckt überstehende Teile der Latte Art */
         }
-        
+        /* Die "Blätter" der Latte Art */
+        .coffee::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 50% 120%, white 20%, transparent 21%),
+                radial-gradient(circle at 50% -20%, white 20%, transparent 21%),
+                radial-gradient(circle at 80% 150%, #c2a18a 30%, transparent 31%),
+                radial-gradient(circle at 20% -50%, #c2a18a 30%, transparent 31%);
+            background-size: 30px 30px;
+            background-repeat: no-repeat;
+            transform: translateY(5px);
+            animation: latte-flow 15s infinite linear;
+        }
+
         .steam {
             position: absolute;
             top: -70px;
             left: 50%;
-            transform: translateX(-50%);
+            transform: translateX(-50%) translateZ(20px); /* Dampf schwebt etwas vor der Tasse */
             display: flex;
             gap: 15px;
             z-index: 10;
@@ -126,33 +145,25 @@
             height: 60px;
             background-color: rgba(255, 255, 255, 0.8);
             border-radius: 8px;
-            filter: blur(2px);
+            filter: blur(3px);
             opacity: 0;
             animation: steam-rise 5s infinite;
         }
         
-        /* Verbesserte, asynchrone Animationen */
         .steam-wisp:nth-child(1) { animation-delay: 0s; animation-timing-function: cubic-bezier(0.25, 0.1, 0.25, 1); }
         .steam-wisp:nth-child(2) { animation-delay: 1.2s; animation-timing-function: cubic-bezier(0.5, 0.1, 0.5, 1); }
         .steam-wisp:nth-child(3) { animation-delay: 2.8s; animation-timing-function: cubic-bezier(0.1, 0.1, 0.1, 1); }
 
-        /* Verbesserte Keyframe-Animation mit seitlicher Drift */
         @keyframes steam-rise {
-            0% {
-                transform: translateY(0) translateX(0) scale(0.8);
-                opacity: 0;
-            }
-            15% {
-                transform: translateY(-25px) translateX(-5px) scale(1);
-                opacity: 0.6;
-            }
-            80% {
-                transform: translateY(-120px) translateX(10px) scale(1.3);
-                opacity: 0;
-            }
-            100% {
-                opacity: 0;
-            }
+            0% { transform: translateY(0) translateX(0) scale(0.8); opacity: 0; }
+            15% { transform: translateY(-25px) translateX(-5px) scale(1); opacity: 0.6; }
+            80% { transform: translateY(-120px) translateX(10px) scale(1.3); opacity: 0; }
+            100% { opacity: 0; }
+        }
+        
+        @keyframes latte-flow {
+            from { background-position: 0% 50%, 100% 50%, 0% 50%, 100% 50%; }
+            to { background-position: 100% 50%, 0% 50%, 100% 50%, 0% 50%; }
         }
     </style>
 </head>
@@ -165,6 +176,25 @@
             <div class="handle"></div>
         </div>
     </div>
+
+<script>
+    // Kleines Skript für die interaktive 3D-Rotation
+    const scene = document.querySelector('.coffee-scene');
+
+    document.body.addEventListener('mousemove', (e) => {
+        // Berechnet die Mausposition relativ zur Fenstermitte
+        const x = (e.clientX - window.innerWidth / 2) / (window.innerWidth / 2);
+        const y = (e.clientY - window.innerHeight / 2) / (window.innerHeight / 2);
+
+        // Definiert den maximalen Rotationswinkel
+        const maxRotation = 20;
+
+        // Setzt die CSS-Variablen basierend auf der Mausposition
+        // Die Y-Mausbewegung steuert die X-Rotation und umgekehrt für eine intuitive Steuerung
+        scene.style.setProperty('--rotate-x', `${y * -maxRotation}deg`);
+        scene.style.setProperty('--rotate-y', `${x * maxRotation}deg`);
+    });
+</script>
 
 </body>
 </html>
