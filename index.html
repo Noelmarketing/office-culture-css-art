@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Profi CSS/SVG Art: Interaktive Kaffeetasse</title>
+    <title>Das Meisterwerk: Interaktive 3D-Kaffeetasse</title>
     <style>
         :root {
-            /* CSS Variablen für die interaktive 3D-Drehung */
-            --rotate-x: -15deg;
-            --rotate-y: 15deg;
+            /* CSS Variablen für die interaktive Drehung */
+            --rotate-x: -20deg;
+            --rotate-y: 25deg;
         }
 
         body {
@@ -16,158 +16,165 @@
             place-items: center;
             min-height: 100vh;
             margin: 0;
-            background: radial-gradient(circle, #f0f2f5, #d9e0e7);
-            perspective: 1200px;
+            /* Ein dunklerer, edlerer Hintergrund für besseren Kontrast */
+            background: #3a3a3a radial-gradient(circle at center, #5c5c5c, #3a3a3a);
+            perspective: 1500px;
             overflow: hidden;
         }
 
-        /* Der Container für die gesamte 3D-Szene */
+        /* Die 3D-Szene: Hier passiert die Magie */
         .scene {
-            position: relative;
-            width: 300px;
-            height: 300px;
+            width: 400px;
+            height: 400px;
             transform-style: preserve-3d;
+            /* Wendet die Rotation aus den CSS-Variablen an */
             transform: rotateX(var(--rotate-x)) rotateY(var(--rotate-y));
-            transition: transform 0.1s linear;
+            transition: transform 0.1s ease-out;
         }
-        
-        /* Der SVG-Container selbst. Er dient als Leinwand. */
+
+        /* Der SVG-Container selbst */
         .coffee-cup-svg {
             position: absolute;
             width: 100%;
             height: 100%;
+            transform: translateZ(20px);
         }
 
-        /* Styling der SVG-Elemente mit CSS */
+        /* --- STYLING DER SVG-ELEMENTE --- */
         #saucer {
-            fill: url(#saucerGradient);
+            fill: url(#porcelainGradient);
             filter: url(#dropShadow);
         }
 
         #mug-body {
-            fill: url(#mugGradient);
+            fill: url(#porcelainGradient);
         }
 
+        /* Der Henkel ist jetzt eine gefüllte Form, kein Strich mehr */
         #handle {
-            fill: none;
-            stroke: url(#handleGradient);
-            stroke-width: 28;
-            stroke-linecap: round;
+            fill: url(#porcelainGradient);
         }
-        
+
+        /* Schatten, den der Henkel auf die Tasse wirft (Ambient Occlusion) */
+        #handle-shadow {
+            fill: black;
+            opacity: 0.08;
+            filter: url(#blurFilter);
+        }
+
         #coffee {
-            fill: #5a3825;
+            fill: #614234;
         }
 
         #latte-art {
             fill: #e6dac8;
-            opacity: 0.8;
-            animation: latte-flow 8s infinite ease-in-out alternate;
+            opacity: 0.9;
+            animation: latte-flow 10s infinite ease-in-out alternate;
         }
 
         #highlight {
-            fill: #ffffff;
-            opacity: 0.2;
-            filter: blur(5px);
-            transform-origin: center;
-            /* Passt das Licht an die Drehung an */
-            transform: rotateY(calc(var(--rotate-y) * -1.5));
+            fill: white;
+            opacity: 0.15;
+            filter: url(#blurFilter);
+            /* Passt das Glanzlicht an die Drehung an */
+            transform-origin: 150px 150px;
+            transform: rotateY(calc(var(--rotate-y) * -0.5));
         }
 
-        /* Dampf-Animation (HTML-Elemente über dem SVG) */
+        /* --- DAMPF-ANIMATION --- */
         .steam-container {
             position: absolute;
-            top: -20px;
-            left: 100px;
-            width: 100px;
-            height: 100px;
-            transform: translateZ(30px); /* Dampf schwebt vor der Tasse */
-            pointer-events: none; /* Macht den Container nicht klickbar */
+            top: 40px;
+            left: 125px;
+            width: 150px;
+            height: 150px;
+            transform: translateZ(80px) rotateY(-15deg);
+            pointer-events: none;
         }
 
         .steam-wisp {
             position: absolute;
             bottom: 0;
             left: 50%;
-            width: 10px;
-            height: 50px;
-            background: rgba(255, 255, 255, 0.75);
-            border-radius: 5px;
-            filter: blur(4px);
+            width: 12px;
+            height: 70px;
+            background: rgba(255, 255, 255, 0.6);
+            border-radius: 6px;
+            filter: blur(5px);
             opacity: 0;
-            animation: steam-rise 6s infinite ease-out;
+            animation: steam-rise 5s infinite ease-out;
         }
 
-        .steam-wisp:nth-child(1) { left: 45%; animation-delay: 0s; }
-        .steam-wisp:nth-child(2) { left: 20%; animation-delay: 1.5s; transform: scale(0.8); }
-        .steam-wisp:nth-child(3) { left: 70%; animation-delay: 3s; transform: scale(0.9); }
+        .steam-wisp:nth-child(1) { left: 45%; animation-delay: 0s; transform: scale(0.9); }
+        .steam-wisp:nth-child(2) { left: 20%; animation-delay: 1.8s; transform: scale(0.8); }
+        .steam-wisp:nth-child(3) { left: 70%; animation-delay: 2.7s; transform: scale(1); }
 
         @keyframes steam-rise {
-            0% { transform: translateY(0) scale(0.8); opacity: 0; }
+            0% { transform: translateY(0) scaleX(1); opacity: 0; }
             20% { opacity: 1; }
-            90% { transform: translateY(-120px) scale(1.5); opacity: 0; }
+            90% { transform: translateY(-140px) scaleX(1.5); opacity: 0; }
             100% { opacity: 0; }
         }
 
         @keyframes latte-flow {
-            from { transform: translateY(0px) scale(1); }
-            to { transform: translateY(3px) scale(1.05); }
+            from { transform: translateY(0px) scale(1) rotate(0deg); }
+            to { transform: translateY(2px) scale(1.03) rotate(5deg); }
         }
-
     </style>
 </head>
 <body>
-    <div class="scene">
-        <div class="steam-container">
-            <div class="steam-wisp"></div>
-            <div class="steam-wisp"></div>
-            <div class="steam-wisp"></div>
-        </div>
 
-        <svg class="coffee-cup-svg" viewBox="0 0 300 300">
-            <defs>
-                <linearGradient id="mugGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                    <stop offset="0%" style="stop-color:#f9f9f9" />
-                    <stop offset="100%" style="stop-color:#e0e0e0" />
-                </linearGradient>
-                <linearGradient id="handleGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                    <stop offset="0%" style="stop-color:#f0f0f0" />
-                    <stop offset="100%" style="stop-color:#dcdcdc" />
-                </linearGradient>
-                <linearGradient id="saucerGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" style="stop-color:#ffffff" />
-                    <stop offset="100%" style="stop-color:#f0f0f0" />
-                </linearGradient>
-                <filter id="dropShadow" x="-20%" y="-20%" width="140%" height="140%">
-                    <feGaussianBlur in="SourceAlpha" stdDeviation="5" result="blur"/>
-                    <feOffset in="blur" dx="5" dy="10" result="offsetBlur"/>
-                    <feFlood flood-color="#000" flood-opacity="0.15" result="offsetColor"/>
-                    <feComposite in="offsetColor" in2="offsetBlur" operator="in" result="offsetBlur"/>
-                    <feMerge>
-                        <feMergeNode/>
-                        <feMergeNode in="SourceGraphic"/>
-                    </feMerge>
-                </filter>
-            </defs>
-            
-            <g>
-                <path id="saucer" d="M 40,220 C 40,250 260,250 260,220 C 260,190 40,190 40,220 Z" />
-                <path id="handle" d="M 235,110 A 40,50 0 1,1 235,190" />
-                <path id="mug-body" d="M 80,80 C 75,200 225,200 220,80 L 220,90 C 225,210 75,210 80,90 Z" />
-                <ellipse id="coffee" cx="150" cy="85" rx="68" ry="20" />
-                <path id="latte-art" d="M 150,85 C 130,75 120,95 150,95 C 180,95 170,75 150,85 Z" />
-                <path id="highlight" d="M 95,90 C 100,120 95,150 90,180 A 100,100 0 0,1 90,100 C 90,100 90,60 95,90 Z" />
-            </g>
-        </svg>
+<div class="scene">
+    <div class="steam-container">
+        <div class="steam-wisp"></div>
+        <div class="steam-wisp"></div>
+        <div class="steam-wisp"></div>
     </div>
 
+    <svg class="coffee-cup-svg" viewBox="0 0 300 300">
+        <defs>
+            <radialGradient id="porcelainGradient" cx="50%" cy="50%" r="70%" fx="30%" fy="30%">
+                <stop offset="0%" style="stop-color:#ffffff" />
+                <stop offset="100%" style="stop-color:#e1e1e1" />
+            </radialGradient>
+            <filter id="dropShadow">
+                <feGaussianBlur in="SourceAlpha" stdDeviation="4" result="blur"/>
+                <feOffset in="blur" dx="6" dy="12" result="offsetBlur"/>
+                <feFlood flood-color="#000" flood-opacity="0.25" result="offsetColor"/>
+                <feComposite in="offsetColor" in2="offsetBlur" operator="in" result="shadow"/>
+                <feMerge>
+                    <feMergeNode in="shadow"/>
+                    <feMergeNode in="SourceGraphic"/>
+                </feMerge>
+            </filter>
+            <filter id="blurFilter">
+                <feGaussianBlur stdDeviation="3" />
+            </filter>
+        </defs>
+        
+        <g id="cup-and-saucer-group" transform="translate(0, 20) rotate(-15 150 150)">
+            <g id="saucer-group" transform="translate(0, 100)">
+                <path id="saucer" d="M 40,120 C 40,150 260,150 260,120 C 260,90 40,90 40,120 Z" />
+            </g>
+            
+            <g id="cup-group" transform="translate(0, -30)">
+                 <path id="handle" d="M220,55 C255,65 265,110 245,140 C240,120 230,80 220,75 C240,85 240,115 225,125 C210,95 210,65 220,55 Z" />
+                 <path id="handle-shadow" d="M220,75 C230,80 240,120 245,140 C235,135 220,105 220,75 Z" />
+                 <path id="mug-body" d="M 80,40 C 75,160 225,160 220,40 L 220,50 C 225,170 75,170 80,50 Z" />
+                <ellipse id="coffee" cx="150" cy="45" rx="68" ry="20" />
+                <path id="latte-art" d="M 150,45 C 130,35 120,55 150,55 C 180,55 170,35 150,45 Z" />
+                <path id="highlight" d="M 95,50 C 100,80 95,110 90,140 A 100,100 0 0,1 90,60 C 90,60 90,20 95,50 Z" />
+            </g>
+        </g>
+    </svg>
+</div>
+
 <script>
-    // Kleines Skript für die interaktive 3D-Rotation
     const scene = document.querySelector('.scene');
     document.body.addEventListener('mousemove', (e) => {
         const x = (e.clientX - window.innerWidth / 2) / (window.innerWidth / 2);
         const y = (e.clientY - window.innerHeight / 2) / (window.innerHeight / 2);
-        const maxRotation = 18;
+        const maxRotation = 25;
         scene.style.setProperty('--rotate-x', `${y * -maxRotation}deg`);
         scene.style.setProperty('--rotate-y', `${x * maxRotation}deg`);
     });
